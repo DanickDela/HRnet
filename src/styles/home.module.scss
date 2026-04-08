@@ -1,0 +1,147 @@
+/**
+ * Hero section styles.
+ *
+ * Defines the layout and appearance of the main banner,
+ * including background image and responsive behavior.
+ */
+.hero {
+  background-image: url("../assets/bank-tree.jpeg");
+  background-position: 0% 33%; /* Adjusts vertical focus of the image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 400px;
+  position: relative;
+
+  /**
+   * Responsive height for smaller screens
+   */
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+
+  /**
+   * Hero content container (text block)
+   */
+  &__content {
+    position: absolute;
+    background: white;
+    top: 50px;
+    right: 50px;
+    width: 300px;
+    padding: 2rem;
+    text-align: left;
+    margin: 0 auto;
+
+    /**
+     * Adjust layout for mobile devices
+     */
+    @media (max-width: 768px) {
+      position: relative;
+      top: 2rem;
+      width: 200px;
+      padding: 2rem;
+    }
+
+    /**
+     * Subtitle text styling
+     */
+    .subtitle {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin: 0;
+
+      @media (max-width: 768px) {
+        font-size: 1.2rem;
+      }
+    }
+
+    /**
+     * Main descriptive text styling
+     */
+    .text {
+      margin-bottom: 0;
+      font-size: 1.2rem;
+
+      @media (max-width: 768px) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+/**
+ * Features section layout.
+ *
+ * Displays feature items in a row on desktop
+ * and switches to column layout on mobile.
+ */
+.features {
+  display: flex;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/**
+ * Feature item styles (BEM structure).
+ */
+.feature {
+  /**
+   * Feature icon styling
+   */
+  &__icon {
+    width: 100px;
+    border: 10px solid #00bc77;
+    border-radius: 50%;
+    padding: 1rem;
+  }
+
+  /**
+   * Feature item container
+   */
+  &__item {
+    flex: 1;
+    padding: 2.5rem;
+
+    /**
+     * Feature title styling
+     */
+    &_title {
+      color: #222;
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+/**
+ * Screen reader only class.
+ *
+ * Hides elements visually while keeping them accessible
+ * for assistive technologies (accessibility improvement).
+ */
+.sr_only {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
+/**
+ * Main container.
+ *
+ * Ensures the main content expands to fill available space.
+ */
+.main {
+  flex: 1;
+}

@@ -1,0 +1,43 @@
+/**
+ * ===============================
+ * Composant : Footer
+ * ===============================
+ *
+ * Description :
+ * Le footer est un conteneur flex centré horizontalement,
+ * utilisé pour afficher des informations en bas de page
+ * (copyright, liens, mentions, etc.).
+ *
+ * Structure BEM :
+ * .footer
+ * └── .footer__text
+ *
+ * Styles principaux :
+ * - display: flex → permet un alignement flexible du contenu
+ * - justify-content: center → centre le contenu horizontalement
+ * - border-top → ajoute une séparation visuelle avec le contenu principal
+ * - padding → espace interne pour aérer le footer
+ *
+ * Responsive :
+ * (À compléter si besoin avec media queries)
+ */
+
+.footer {
+  display: flex;
+  justify-content: center;
+  border-top: 2px solid #ccc;
+  padding: 2rem 0 1.5rem;
+
+  /**
+   * Élément : Texte du footer
+   *
+   * Description :
+   * Contient le texte principal du footer.
+   * Les marges et paddings sont supprimés
+   * pour un rendu propre et contrôlé.
+   */
+  &__text {
+    margin: 0;
+    padding: 0;
+  }
+}

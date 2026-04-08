@@ -1,0 +1,121 @@
+/**
+ * Edit name form styles.
+ *
+ * Defines layout, spacing, and responsiveness of the profile edit form.
+ * Uses flexbox and follows a BEM structure for clarity and maintainability.
+ */
+.edit_name_form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+
+  /**
+   * Responsive adjustments for smaller screens
+   */
+  @media (max-width: 768px) {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  /**
+   * Row container for input fields.
+   *
+   * Displays inputs side by side on desktop
+   * and stacks them vertically on mobile.
+   */
+  &_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  }
+
+  /**
+   * Input field styling.
+   */
+  &_input {
+    width: 200px;
+    color: black;
+    padding: 10px 0px 10px 20px;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+
+  /**
+   * Placeholder styling.
+   */
+  &_input::placeholder {
+    color: #999;
+  }
+
+  /**
+   * Action buttons container (Save / Cancel).
+   */
+  &_actions {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+  }
+
+  /**
+   * Button styling inside the form.
+   */
+  &_button {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    width: 100px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+
+    /**
+     * Hover effect
+     */
+    &:hover {
+      background-color: #00bc77;
+    }
+  }
+}
+
+/**
+ * Main edit button (outside the form).
+ *
+ * Used to trigger edit mode.
+ */
+.edit_button {
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+}
+
+/**
+ * Screen reader only class.
+ *
+ * Hides content visually while keeping it accessible
+ * for assistive technologies.
+ */
+.sr-only {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}

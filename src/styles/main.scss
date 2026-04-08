@@ -1,0 +1,58 @@
+/**
+ * Global HTML styles.
+ *
+ * Defines the base typography, text rendering optimizations,
+ * and default text alignment for the application.
+ */
+html {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; /* Improves font rendering on WebKit browsers */
+  -moz-osx-font-smoothing: grayscale; /* Improves font rendering on macOS */
+  text-align: center;
+  color: #2c3e50;
+}
+
+/**
+ * Body layout styles.
+ *
+ * Sets up a flex container to structure the page vertically,
+ * ensures full viewport height, and centers content with a max width.
+ */
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1440px;
+  margin: auto;
+}
+
+/**
+ * Screen reader only class.
+ *
+ * Hides content visually while keeping it accessible
+ * to screen readers for improved accessibility.
+ *
+ * Common use cases:
+ * - Hidden headings for semantic structure
+ * - Accessible labels for assistive technologies
+ */
+.sr-only {
+  border: 0 !important;
+
+  /* Visually hides the element */
+  clip: rect(1px, 1px, 1px, 1px) !important; /* Legacy clipping */
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important; /* Modern clipping */
+
+  height: 1px !important;
+  width: 1px !important;
+
+  margin: -1px !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+  position: absolute !important;
+
+  white-space: nowrap !important; /* Prevents line breaks */
+}

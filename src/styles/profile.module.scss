@@ -1,0 +1,129 @@
+/**
+ * Account component styles.
+ *
+ * Defines the layout and appearance of account sections,
+ * including responsive behavior for mobile devices.
+ */
+
+.account {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  background-color: #fff;
+  width: 80%;
+  margin: 0 auto 2rem;
+  flex-direction: column;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  text-align: left;
+
+  /**
+   * Adjusts text alignment for smaller screens
+   */
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+
+  /**
+   * Account amount (main value)
+   */
+  &__amount {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  /**
+   * Account amount description (e.g., Available Balance)
+   */
+  &__amount_description {
+    margin: 0;
+  }
+
+  /**
+   * Account title (e.g., account name and number)
+   */
+  &__title {
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: normal;
+  }
+
+  /**
+   * Wrapper for account content
+   */
+  &__content_wrapper {
+    width: 100%;
+    flex: 1;
+
+    /**
+     * CTA section adjustments for mobile
+     */
+    &.cta {
+      @media (max-width: 768px) {
+        flex: 0;
+      }
+    }
+  }
+}
+
+/**
+ * Transaction button styles.
+ *
+ * Defines appearance and layout of the call-to-action button.
+ */
+.transaction_button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+}
+
+/**
+ * Responsive adjustments for mobile devices
+ */
+@media (max-width: 768px) {
+  .account {
+    flex-direction: column;
+  }
+
+  .transaction_button {
+    width: 200px;
+  }
+}
+
+/**
+ * Main container styles.
+ *
+ * Controls vertical spacing of the main content area.
+ */
+.main {
+  flex: 1;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+/**
+ * Dark background modifier.
+ *
+ * Used for pages requiring a dark theme (e.g., profile page).
+ */
+.bgdark {
+  background-color: #12002b;
+}
+
+/**
+ * Profile header styles.
+ *
+ * Applies text color for the profile header section.
+ */
+.head_profile {
+  color: white;
+}

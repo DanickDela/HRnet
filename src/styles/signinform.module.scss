@@ -1,0 +1,84 @@
+/**
+ * Sign-in form container styles.
+ *
+ * Defines layout, spacing, and appearance of the login form.
+ */
+.signin_content {
+  box-sizing: border-box;
+  background-color: white;
+  width: 300px;
+  margin: 0 auto;
+  margin-top: 3rem;
+  padding: 2rem;
+
+  /**
+   * Submit button styling.
+   *
+   * Used for the "Sign In" action.
+   */
+  &_button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    border-color: #00bc77;
+    background-color: #00bc77;
+    color: #fff;
+  }
+}
+
+/**
+ * Sign-in icon styling.
+ *
+ * Controls size of the user icon displayed above the form.
+ */
+.signin_icon {
+  font-size: 80px;
+}
+
+/**
+ * "Remember me" checkbox container.
+ *
+ * Aligns checkbox and label horizontally.
+ */
+.input_remember {
+  display: flex;
+}
+
+/**
+ * "Remember me" label spacing.
+ */
+.input_remember label {
+  margin-left: 0.25rem;
+}
+
+/**
+ * Input wrapper.
+ *
+ * Groups label and input vertically with spacing.
+ */
+.input_wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+/**
+ * Input label styling.
+ */
+.input_wrapper label {
+  font-weight: bold;
+}
+
+/**
+ * Input field styling.
+ *
+ * Defines padding and font size for better readability.
+ */
+.input_wrapper input {
+  padding: 5px;
+  font-size: 1.2rem;
+}

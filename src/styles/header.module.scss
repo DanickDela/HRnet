@@ -1,0 +1,141 @@
+/**
+ * Header component styles.
+ *
+ * Defines the layout and appearance of the application's header,
+ * including navigation, logo, and authentication elements.
+ */
+.header {
+  color: #fff;
+
+  /**
+   * Navigation container.
+   *
+   * Uses flexbox to align logo and navigation items horizontally.
+   */
+  .nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+
+    /**
+     * Logo container.
+     */
+    &__logo {
+      display: flex;
+      align-items: center;
+
+      /**
+       * Logo image styling
+       */
+      &_image {
+        width: 200px;
+
+        @media (max-width: 768px) {
+          width: 100px;
+        }
+      }
+    }
+
+    /**
+     * Authentication section (profile + logout).
+     */
+    &__auth {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      @media (max-width: 768px) {
+        gap: 10px;
+      }
+    }
+
+    /**
+     * Navigation item (links).
+     */
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
+      text-decoration: none;
+
+      /**
+       * User icon styling
+       */
+      &_iconeuser {
+        font-size: 40px;
+
+        @media (max-width: 768px) {
+          font-size: 20px;
+        }
+      }
+    }
+
+    /**
+     * Sign-out button styling.
+     */
+    &__item_sign {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      color: #2c3e50;
+
+      /**
+       * Logout icon styling
+       */
+      &_iconeout {
+        font-size: 20px;
+
+        @media (max-width: 768px) {
+          font-size: 15px;
+        }
+      }
+
+      /**
+       * Logout text styling
+       */
+      &_text {
+        margin-left: 5px;
+        font-size: 1.2rem;
+        font-weight: bold;
+
+        @media (max-width: 768px) {
+          font-size: 0.9em;
+        }
+      }
+
+      /**
+       * Hover effect
+       */
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    /**
+     * Global link styles inside navigation.
+     */
+    a {
+      font-weight: bold;
+      color: #2c3e50;
+
+      /**
+       * Active link styling
+       */
+      &.router-link-exact-active {
+        color: #42b983;
+      }
+
+      /**
+       * Hover effect
+       */
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
