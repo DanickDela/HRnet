@@ -1,3 +1,5 @@
+@use "../../styles/variables";
+@use "../../styles/mixins";
 /**
  * Sign-in form container styles.
  *
@@ -5,7 +7,7 @@
  */
 .signin_content {
   box-sizing: border-box;
-  background-color: white;
+  background-color: variables.$color-white;
   width: 300px;
   margin: 0 auto;
   margin-top: 3rem;
@@ -17,15 +19,7 @@
    * Used for the "Sign In" action.
    */
   &_button {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-top: 1rem;
-    border-color: #00bc77;
-    background-color: #00bc77;
-    color: #fff;
+    @include mixins.primary-button;
   }
 }
 
@@ -35,6 +29,7 @@
  * Controls size of the user icon displayed above the form.
  */
 .signin_icon {
+  color: variables.$color-gray;
   font-size: 80px;
 }
 
@@ -70,7 +65,8 @@
  * Input label styling.
  */
 .input_wrapper label {
-  font-weight: bold;
+  color: variables.$color-gray;
+  font-weight: variables.$bold;
 }
 
 /**

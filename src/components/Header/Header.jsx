@@ -24,12 +24,20 @@
  */
 
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../assets/argentBankLogo.png";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { useState } from "react";
+import logo from "../../assets/HRnet.svg";
+import {
+  FaUserCircle,
+  FaSignOutAlt,
+  FaUsers,
+  FaPlus,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { clearToken } from "../../store/authSlice";
 import { clearUserProfile } from "../../store/userSlice";
-import styles from "../../styles/header.module.scss";
+import styles from "./header.module.scss";
 
 function Header() {
   const dispatch = useDispatch();
@@ -38,54 +46,100 @@ function Header() {
   const token = useSelector((state) => state.auth.token);
   const { firstName } = useSelector((state) => state.user);
 
-  /**
-   * Handles user sign-out.
-   *
-   * Clears authentication token and user profile from Redux store,
-   * then redirects the user to the home page.
-   */
+  const [menuOpen, setMenuOpen] = useState(false);
+
   function handleSignOut() {
     dispatch(clearToken());
     dispatch(clearUserProfile());
     navigate("/");
+    setMenuOpen(false);
+  }
+
+  function closeMenu() {
+    setMenuOpen(false);
   }
 
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
-        <NavLink to="/" className={styles.nav__logo}>
+        {/* Logo */}
+        <NavLink to="/" className={styles.nav__logo} onClick={closeMenu}>
           <img
             className={styles.nav__logo_image}
             src={logo}
-            alt="Argent Bank Logo"
+            alt="Wealth Health logo"
           />
-          <h1 className="sr-only">Argent Bank</h1>
+          <span className={styles.nav__logo_title}>WEALTH HEALTH</span>
         </NavLink>
 
-        {token ? (
-          <div className={styles.nav__auth}>
-            <NavLink to="/profile" className={styles.nav__item}>
-              <FaUserCircle className={styles.nav__item_iconeuser} />
-              <span className={styles.nav__item_sign_text}>{firstName}</span>
-            </NavLink>
+        {/* Title */}
+        <h1 className={styles.nav__title}>HRnet</h1>
 
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className={styles.nav__item_sign}
+        {/* Burger mobile */}
+        <button
+          type="button"
+          className={styles.nav__burger}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Open menu"
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Menu */}
+        <div
+          className={`${styles.nav__menu} ${
+            menuOpen ? styles.nav__menu_open : ""
+          }`}
+        >
+          {token ? (
+            <>
+              <NavLink
+                to="/createemployee"
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `${styles.nav__link} ${isActive ? styles.active : ""}`
+                }
+              >
+                <FaPlus />
+                <span>Create Employee</span>
+              </NavLink>
+
+              <NavLink
+                to="/listeemployees"
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `${styles.nav__link} ${isActive ? styles.active : ""}`
+                }
+              >
+                <FaUsers />
+                <span>View Employees</span>
+              </NavLink>
+
+              <div className={styles.nav__user}>
+                <FaUserCircle />
+                <span>{firstName}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className={styles.nav__logout}
+              >
+                <FaSignOutAlt />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/login"
+              onClick={closeMenu}
+              className={styles.nav__link}
             >
-              <FaSignOutAlt className={styles.nav__item_sign_iconeout} />
-              <span className={styles.nav__item_sign_text}>Sign Out</span>
-            </button>
-          </div>
-        ) : (
-          <div>
-            <NavLink to="/login" className={styles.nav__item}>
-              <FaUserCircle className={styles.nav__item_iconeuser} />
-              <span className={styles.nav__item_sign_text}>Sign In</span>
+              <FaUserCircle />
+              <span>Sign In</span>
             </NavLink>
-          </div>
-        )}
+          )}
+        </div>
       </nav>
     </header>
   );

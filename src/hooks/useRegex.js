@@ -33,10 +33,19 @@ export const isValidPassword = (password) => {
  * - Numbers
  * - Spaces or hyphens between words
  *
+ * Notes:
+ * - HTML tags are removed before validation
+ * - Leading and trailing spaces are ignored
+ *
  * @param {string} name - The name to validate
  * @returns {boolean} True if the name is valid, otherwise false
  */
 export const isValidName = (name) => {
+  if (!name) return false;
+
+  const cleanName = name.replace(/<[^>]*>/g, "").trim();
+
   const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ -][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$/;
-  return regex.test(name);
+
+  return regex.test(cleanName);
 };

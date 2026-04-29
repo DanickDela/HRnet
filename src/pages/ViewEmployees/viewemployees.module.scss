@@ -1,0 +1,274 @@
+@use "../../styles/variables";
+@use "../../styles/mixins";
+
+.listemployees {
+  width: 100%;
+  max-width: 1050px;
+  border-radius: 20px;
+
+  @media (max-width: variables.$mobile) {
+    max-width: 100%;
+    padding: 0 12px;
+    border-radius: 0;
+  }
+
+  &__title {
+    margin-bottom: 24px;
+
+    @media (max-width: variables.$mobile) {
+      text-align: center;
+      font-size: 1.6rem;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &__filter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 8px;
+    @media (max-width: variables.$mobile) {
+      width: 100%;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+    &_label {
+      font-size: 1.1rem;
+      font-weight: variables.$bold;
+      margin-right: 10px;
+      color: variables.$color-gray;
+
+      @media (max-width: variables.$mobile) {
+        margin-right: 0;
+        font-size: 0.9rem;
+      }
+    }
+    &_input {
+      @include mixins.form-field;
+      @include mixins.form-placeholder;
+      font-weight: variables.$regular;
+      color: variables.$color-gray;
+      height: 32px;
+      width: 200px;
+      padding: 0 16px;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px 0 0 5px;
+      @media (max-width: variables.$mobile) {
+        width: 100%;
+        height: 25px;
+      }
+    }
+  }
+
+  &__clear {
+    height: 34px;
+    width: 32px;
+    border: 1px solid #e5e5e5;
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #fff;
+  }
+
+  &__delete {
+    @include mixins.primary-button(22px, 0px, 0);
+    font-size: 0.9rem;
+    margin-right: 10px;
+    margin-left: 5px;
+    margin-bottom: 7px;
+  }
+}
+
+.headerCell {
+  display: inline-block;
+  white-space: normal;
+  line-height: 1.2;
+  text-align: left;
+  font-weight: 600;
+
+  @media (max-width: variables.$mobile) {
+    font-size: 0.8rem;
+  }
+}
+
+:global(.rdt_TableHeadRow *) {
+  font-size: 0.9rem;
+  @media (max-width: variables.$mobile) {
+    font-size: 0.7rem;
+  }
+}
+
+:global(.rdt_TableHead[data-column-id="actions"]) {
+  display: flex;
+  justify-content: center;
+}
+
+:global(.rdt_TableCell),
+:global(.rdt_TableCol) {
+  font-size: 0.9rem;
+
+  @media (max-width: variables.$mobile) {
+    font-size: 0.7rem;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="select"] .rdt_TableCol_Sortable) {
+  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center;
+}
+
+:global(.rdt_TableCol[data-column-id="select"] span) {
+  text-align: center !important;
+}
+
+:global(.rdt_TableCol[data-column-id="select"]),
+:global(.rdt_TableCell[data-column-id="select"]) {
+  display: flex;
+  justify-content: center;
+  min-width: 20px;
+  max-width: 200px;
+  @media (max-width: variables.$mobile) {
+    min-width: 10px;
+    max-width: 50px;
+  }
+}
+:global(.rdt_TableCol[data-column-id="firstName"]),
+:global(.rdt_TableCell[data-column-id="firstName"]) {
+  text-align: left;
+  min-width: 60px;
+  max-width: 100px;
+  @media (max-width: variables.$mobile) {
+    min-width: 10px;
+    max-width: 70px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="lastName"]),
+:global(.rdt_TableCell[data-column-id="lastName"]) {
+  text-align: left;
+  min-width: 60px;
+  max-width: 100px;
+  @media (max-width: variables.$mobile) {
+    min-width: 10px;
+    max-width: 70px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="startDate"]),
+:global(.rdt_TableCell[data-column-id="startDate"]) {
+  text-align: left;
+  min-width: 60px;
+  max-width: 90px;
+  @media (max-width: variables.$mobile) {
+    margin-right: 5px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="department"]),
+:global(.rdt_TableCell[data-column-id="department"]) {
+  text-align: left;
+  min-width: 80px;
+  max-width: 120px;
+  @media (max-width: variables.$mobile) {
+    min-width: 80px;
+    max-width: 90px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="dateOfBirth"]),
+:global(.rdt_TableCell[data-column-id="dateOfBirth"]) {
+  text-align: left;
+  min-width: 60px;
+  max-width: 90px;
+  @media (max-width: variables.$mobile) {
+    margin-right: 5px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="street"]),
+:global(.rdt_TableCell[data-column-id="street"]) {
+  text-align: left;
+  min-width: 150px;
+  max-width: 170px;
+  @media (max-width: variables.$mobile) {
+    min-width: 80px;
+    max-width: 90px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="city"]),
+:global(.rdt_TableCell[data-column-id="city"]) {
+  text-align: left;
+  min-width: 90px;
+  max-width: 110px;
+  @media (max-width: variables.$mobile) {
+    min-width: 80px;
+    max-width: 90px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="stateUS"]),
+:global(.rdt_TableCell[data-column-id="stateUS"]) {
+  text-align: left;
+  min-width: 20px;
+  max-width: 40px;
+  @media (max-width: variables.$mobile) {
+    min-width: 20px;
+    max-width: 30px;
+  }
+}
+
+:global(.rdt_TableCol[data-column-id="zipCode"]),
+:global(.rdt_TableCell[data-column-id="zipCode"]) {
+  text-align: left;
+  min-width: 10px;
+  max-width: 80px;
+}
+
+:global(.rdt_TableCol[data-column-id="actions"]),
+:global(.rdt_TableCell[data-column-id="actions"]) {
+  text-align: center;
+  min-width: 80px;
+  max-width: 100px;
+}
+
+:global(.rdt_TableRow:hover) {
+  background-color: variables.$color-accent !important;
+  color: variables.$color-white !important;
+  font-weight: variables.$bold;
+  transition: background-color 0.2s ease;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.listemployees__input:focus,
+.listemployees__delete:focus {
+  outline: 2px solid variables.$color-primary;
+  outline-offset: 3px;
+}
+
+.test {
+  flex-direction: column;
+  margin-top: 100px;
+}

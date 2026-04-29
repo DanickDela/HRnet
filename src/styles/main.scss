@@ -1,3 +1,9 @@
+@use "../styles/variables";
+
+:root {
+  --color-primary: #{variables.$color-primary};
+}
+
 /**
  * Global HTML styles.
  *
@@ -9,9 +15,14 @@ html {
   -webkit-font-smoothing: antialiased; /* Improves font rendering on WebKit browsers */
   -moz-osx-font-smoothing: grayscale; /* Improves font rendering on macOS */
   text-align: center;
-  color: #2c3e50;
+  color: variables.$color-gray;
 }
 
+h1 {
+  color: variables.$color-gray;
+  font-size: 32px;
+  font-weight: variables.$bold;
+}
 /**
  * Body layout styles.
  *
@@ -55,4 +66,16 @@ body {
   position: absolute !important;
 
   white-space: nowrap !important; /* Prevents line breaks */
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 200px);
+  padding-top: 40px;
+  background: linear-gradient(180deg, #f7faf7 0%, #eef5ef 100%);
+  @media (max-width: variables.$mobile) {
+    padding-top: 0px;
+  }
 }

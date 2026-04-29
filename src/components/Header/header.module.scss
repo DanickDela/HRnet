@@ -1,0 +1,188 @@
+@use "../../styles/variables";
+
+.header {
+  background-color: variables.$color-primary-light;
+  min-height: 100px;
+  padding: 10px 50px;
+  border-bottom: 2px solid variables.$border-default;
+
+  @media (max-width: variables.$mobile) {
+    padding: 10px 20px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    gap: 20px;
+
+    /* ===================== LOGO ===================== */
+
+    &__logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &_image {
+        width: 80px;
+        height: 80px;
+
+        @media (max-width: variables.$mobile) {
+          width: 65px;
+          height: 65px;
+        }
+      }
+
+      &_title {
+        margin-left: 10px;
+        font-size: 1.2rem;
+        font-weight: variables.$bold;
+        color: variables.$color-primary-dark;
+
+        @media (max-width: variables.$mobile) {
+          display: none;
+        }
+      }
+    }
+
+    /* ===================== TITLE ===================== */
+
+    &__title {
+      font-size: 2.2rem;
+      font-weight: variables.$bold;
+      color: variables.$color-primary-dark;
+
+      @media (max-width: variables.$mobile) {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* ===================== BURGER ===================== */
+
+    &__burger {
+      display: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.8rem;
+      color: variables.$color-primary-dark;
+
+      @media (max-width: variables.$mobile) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    /* ===================== MENU DESKTOP ===================== */
+
+    &__menu {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+
+      @media (max-width: variables.$mobile) {
+        position: absolute;
+        top: 90px;
+        right: 0;
+        width: 100%;
+        background: white;
+        border-top: 1px solid variables.$border-default;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: 0.25s ease;
+        z-index: 50;
+      }
+
+      &_open {
+        @media (max-width: variables.$mobile) {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    /* ===================== LINKS ===================== */
+
+    &__link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: variables.$color-gray;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: 0.2s;
+
+      &:hover {
+        color: variables.$color-primary;
+      }
+
+      @media (max-width: variables.$mobile) {
+        width: 100%;
+        margin-left: 30px;
+      }
+    }
+
+    /* ===================== USER ===================== */
+
+    &__user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: variables.$color-gray;
+      font-weight: variables.$bold;
+      font-size: 1.1rem;
+      @media (max-width: variables.$mobile) {
+        width: 100%;
+        margin-left: 30px;
+      }
+    }
+
+    /* ===================== LOGOUT ===================== */
+
+    &__logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: variables.$color-gray;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: 0.2s;
+      @media (max-width: variables.$mobile) {
+        width: 100%;
+        margin-left: 30px;
+      }
+      &:hover {
+        color: variables.$color-primary;
+      }
+
+      @media (max-width: variables.$mobile) {
+        padding: 10px 0;
+      }
+    }
+  }
+}
+
+/* ===================== ACTIVE LINK ===================== */
+
+.active {
+  color: variables.$color-primary;
+}

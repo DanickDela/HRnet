@@ -10,12 +10,12 @@
  * @returns {JSX.Element} The login page
  */
 
-import styles from "../../styles/login.module.scss";
+import styles from "./login.module.scss";
 import SigninForm from "../../components/SigninForm/SigninForm";
 
 function Login() {
   return (
-    <main className={`${styles.main} ${styles.bgdark}`}>
+    <main className={styles.main}>
       <SigninForm />
     </main>
   );

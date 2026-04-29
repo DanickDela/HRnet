@@ -1,108 +1,99 @@
-/**
- * Redux slice for managing user profile state.
- *
- * This slice handles:
- * - Fetching user profile from the API
- * - Storing user information (firstName, lastName)
- * - Managing request status (idle, loading, succeeded, failed)
- * - Handling errors during API calls
- *
- * It uses Redux Toolkit's createAsyncThunk for asynchronous logic
- * and createSlice for state management.
- */
-
-import { createSlice } from "@reduxjs/toolkit";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getUserProfile } from "../service/api";
 
 /**
- * Async thunk to fetch the authenticated user's profile.
+ * Thunk asynchrone chargé de récupérer le profil utilisateur
+ * depuis l’API à partir d’un token d’authentification.
  *
- * Behavior:
- * - Sends a request to the API using the provided token
- * - Returns user data on success
- * - Returns a custom error message on failure
- * - Prevents duplicate requests using the condition function
+ * Comportement :
+ * - en cas de succès, les données du profil sont renvoyées
+ * - en cas d’échec, un message d’erreur est transmis via `rejectWithValue`
  *
  * @function fetchUserProfile
- * @param {string} token - Authentication token (JWT)
- * @returns {Promise<Object>} The user profile data
+ * @param {string} token - Token JWT utilisé pour authentifier la requête.
+ * @returns {Promise<Object|string>} Les données du profil utilisateur ou un message d’erreur.
  */
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchUserProfile",
-  async (token, thunkAPI) => {
+  async (token, { rejectWithValue }) => {
     try {
       return await getUserProfile(token);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || "Server error",
-      );
+      return rejectWithValue(error.message);
     }
-  },
-  {
-    /**
-     * Prevents unnecessary or duplicate API calls.
-     *
-     * Conditions:
-     * - Blocks request if already loading
-     * - Blocks request if data is already successfully fetched
-     *
-     * @param {string} token
-     * @param {Object} options
-     * @param {Function} options.getState - Function to access current Redux state
-     * @returns {boolean} Whether the request should proceed
-     */
-    condition: (token, { getState }) => {
-      const { user } = getState();
-
-      if (user.status === "loading") return false;
-      if (user.status === "succeeded") return false;
-
-      return true;
-    },
   },
 );
 
 /**
- * User slice definition.
+ * État Redux du slice user.
  *
- * State:
- * - firstName: user's first name
- * - lastName: user's last name
- * - status: request status (idle | loading | succeeded | failed)
- * - error: error message if request fails
+ * @typedef {Object} UserState
+ * @property {string} firstName - Prénom de l’utilisateur.
+ * @property {string} lastName - Nom de l’utilisateur.
+ * @property {string} email - Adresse email de l’utilisateur.
+ * @property {"idle"|"loading"|"succeeded"|"failed"} status - Statut de la requête de récupération du profil.
+ * @property {string|null} error - Message d’erreur éventuel.
+ */
+
+/**
+ * Slice Redux chargé de la gestion du profil utilisateur.
+ *
+ * Ce slice gère :
+ * - le stockage local des informations du profil
+ * - la mise à jour manuelle des données utilisateur
+ * - la réinitialisation du profil
+ * - la récupération asynchrone du profil depuis l’API
+ *
+ * Le cycle asynchrone est piloté via `createAsyncThunk`
+ * et traité dans `extraReducers`.
  */
 const userSlice = createSlice({
   name: "user",
+
+  /**
+   * État initial du slice user.
+   *
+   * @type {UserState}
+   */
   initialState: {
     firstName: "",
     lastName: "",
+    email: "",
     status: "idle",
     error: null,
   },
 
   reducers: {
     /**
-     * Sets the user profile in the Redux store.
+     * Met à jour manuellement les informations du profil utilisateur.
      *
-     * @param {Object} state
-     * @param {Object} action
-     * @param {string} action.payload.firstName
-     * @param {string} action.payload.lastName
+     * Cette action est utile lorsque les données sont déjà connues
+     * ou lorsqu’une mise à jour locale du profil est nécessaire.
+     *
+     * @param {UserState} state - État courant du slice.
+     * @param {{ payload: { firstName: string, lastName: string, email?: string } }} action - Action Redux contenant les nouvelles données du profil.
+     * @returns {void}
      */
-    setUserProfile: (state, action) => {
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
+    setUserProfile: (state, { payload }) => {
+      state.firstName = payload.firstName;
+      state.lastName = payload.lastName;
+      state.email = payload.email || "";
+      state.error = null;
     },
 
     /**
-     * Clears the user profile and resets state.
+     * Réinitialise complètement le profil utilisateur dans le store.
      *
-     * @param {Object} state
+     * Cette action efface les données personnelles
+     * et remet le statut du slice à son état initial.
+     *
+     * @param {UserState} state - État courant du slice.
+     * @returns {void}
      */
     clearUserProfile: (state) => {
       state.firstName = "";
       state.lastName = "";
+      state.email = "";
       state.status = "idle";
       state.error = null;
     },
@@ -111,7 +102,10 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       /**
-       * Handles pending state of fetchUserProfile.
+       * Déclenché lorsque la récupération du profil commence.
+       *
+       * Met le slice en état de chargement
+       * et réinitialise l’erreur éventuelle.
        */
       .addCase(fetchUserProfile.pending, (state) => {
         state.status = "loading";
@@ -119,26 +113,43 @@ const userSlice = createSlice({
       })
 
       /**
-       * Handles successful fetch of user profile.
+       * Déclenché lorsque la récupération du profil réussit.
+       *
+       * Met à jour les informations utilisateur
+       * et passe le statut à `succeeded`.
        */
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.firstName = action.payload.firstName;
         state.lastName = action.payload.lastName;
-        state.status = "succeeded";
+        state.email = action.payload.email;
         state.error = null;
       })
 
       /**
-       * Handles failed fetch of user profile.
+       * Déclenché lorsque la récupération du profil échoue.
+       *
+       * Passe le statut à `failed`
+       * et enregistre le message d’erreur retourné.
        */
       .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.firstName = "";
-        state.lastName = "";
-        state.error = action.payload;
         state.status = "failed";
+        state.error = action.payload || "Unable to fetch user profile";
       });
   },
 });
 
-export const { clearUserProfile, setUserProfile } = userSlice.actions;
+/**
+ * Actions Redux exportées du slice user.
+ *
+ * - `setUserProfile` : met à jour manuellement le profil
+ * - `clearUserProfile` : réinitialise complètement le profil
+ */
+export const { setUserProfile, clearUserProfile } = userSlice.actions;
+
+/**
+ * Reducer principal du slice user.
+ *
+ * @type {import("redux").Reducer<UserState>}
+ */
 export default userSlice.reducer;

@@ -31,7 +31,7 @@
  */
 
 import { useEffect, useState } from "react";
-import styles from "../../styles/signinform.module.scss";
+import styles from "./signinform.module.scss";
 import { FaUserCircle } from "react-icons/fa";
 import { useLoginUser } from "../../hooks/useLoginUser";
 import { useSelector } from "react-redux";
@@ -48,7 +48,7 @@ function SigninForm() {
    */
   useEffect(() => {
     if (token) {
-      navigate("/profile");
+      navigate("/createemployee");
     }
   }, [token, navigate]);
 
@@ -76,8 +76,8 @@ function SigninForm() {
   function handleBlurPassword() {
     if (!password) {
       setError("Password is required");
-    } else if (password.length < 11) {
-      setError("Password must be at least 11 characters");
+    } else if (password.length < 5) {
+      setError("Password must be at least 5 characters");
     } else {
       setError("");
     }
@@ -109,8 +109,8 @@ function SigninForm() {
       return;
     }
 
-    if (password.length < 11) {
-      setError("Password must be at least 11 characters");
+    if (password.length < 5) {
+      setError("Password must be at least 5characters");
       return;
     }
 

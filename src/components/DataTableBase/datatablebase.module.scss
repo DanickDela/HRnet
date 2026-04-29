@@ -1,0 +1,18 @@
+@use "../../styles/variables";
+/*permet de mettre l'entête du tableau sur 2 lignes si nécessaire*/
+
+.ArrowDropDownIcon {
+  height: 10px;
+  color: #8abd24;
+  transition: color 0.2s;
+  font-size: 2rem;
+
+  &:hover {
+    color: #8abd24;
+  }
+}
+
+:global(.MuiSvgIcon-root) {
+  font-size: 48px;
+  color: #8abd24;
+}

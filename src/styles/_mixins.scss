@@ -1,0 +1,93 @@
+@use "./variables";
+
+/**
+ * Base style for form fields.
+ *
+ * Applies consistent sizing, border, radius, colors,
+ * transitions, and focus state to inputs and selects.
+ *
+ * @param {string} $padding - Inner spacing of the field
+ * @param {number} $radius - Border radius
+ * @param {number} $min-height - Minimum height of the field
+ */
+@mixin form-field($padding: 12px 14px, $radius: 10px, $min-height: 20px) {
+  width: 100%;
+  min-height: $min-height;
+  padding: $padding;
+  border: 1px solid variables.$border-default;
+  border-radius: $radius;
+  background-color: variables.$color-white;
+  font-size: 1rem;
+  box-sizing: border-box;
+  color: variables.$border-default;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: variables.$color-primary;
+    box-shadow: 0 0 0 3px rgba(138, 189, 36, 0.2);
+  }
+}
+
+/**
+ * Placeholder style.
+ *
+ * @param {color} $color - Placeholder color
+ * @param {number} $size - Placeholder font size
+ * @param {string} $style - Placeholder font style
+ */
+@mixin form-placeholder(
+  $color: variables.$color-gray-400,
+  $size: 0.9rem,
+  $style: italic
+) {
+  &::placeholder {
+    color: $color;
+    font-size: $size;
+    font-style: $style;
+  }
+}
+
+/**
+ * Main button style
+ *
+ * @param {Length} $radius - Border radius
+ * @param {Length} $min-height - Minimum height
+ * @param {Length} $padding-y - Vertical padding
+ * @param {Length} $padding-x - Horizontal padding
+ * @param {Length} $font-size - Font size
+ */
+@mixin primary-button($min-height: 48px, $padding-y: 8px, $padding-x: 8px) {
+  display: block;
+  width: 100%;
+  min-height: $min-height;
+  padding: $padding-y $padding-x;
+  margin-top: 10px;
+  border-radius: 5px;
+  border-color: variables.$color-primary;
+  background-color: variables.$color-primary;
+  color: variables.$color-black;
+  font-size: 1.1rem;
+  font-weight: variables.$bold;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    outline: 2px solid variables.$color-primary;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

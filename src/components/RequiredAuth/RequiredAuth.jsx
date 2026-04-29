@@ -1,25 +1,14 @@
-/**
- * RequiredAuth component.
- *
- * This component protects routes that require authentication.
- * It checks if the user is authorized using a custom hook.
- *
- * - If the user is authorized, it renders the protected content (children)
- * - If not, it redirects the user to the login page
- *
- * @component
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Protected content to render if authorized
- * @returns {JSX.Element} The protected content or a redirection to the login page
- */
-
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { useAuthorized } from "../../hooks/useAuthorized";
 
 function RequiredAuth({ children }) {
-  const isAuthorized = useAuthorized();
+  const token = useSelector((state) => state.auth.token);
 
-  return isAuthorized ? children : <Navigate to="/login" replace />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 }
 
 export default RequiredAuth;
