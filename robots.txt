@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Empêche l'indexation de fichiers inutiles
+Disallow: /assets/
+Disallow: /*.js$
+Disallow: /*.css$

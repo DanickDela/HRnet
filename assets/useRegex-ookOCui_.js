@@ -1,0 +1,1 @@
+var e=e=>/^\S+@\S+\.\S+$/.test(e),t=e=>{if(!e)return!1;let t=e.replace(/<[^>]*>/g,``).trim();return/^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ -][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$/.test(t)};export{t as n,e as t};
