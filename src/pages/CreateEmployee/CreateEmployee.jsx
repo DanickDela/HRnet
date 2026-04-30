@@ -21,25 +21,26 @@ import "@delaroche/hrnet-modal/style.css";
 /**
  * Champ de saisie personnalisé utilisé par `react-datepicker`.
  *
- * Ce composant encapsule un input masqué afin de permettre :
- * - la saisie manuelle d'une date au format américain `MM/DD/YYYY`
- * - l'ouverture du calendrier au clic
- * - la synchronisation avec le composant `DatePicker`
+ * Ce composant encapsule un champ masqué permettant :
+ * - la saisie manuelle d’une date au format américain `MM/DD/YYYY` ;
+ * - l’ouverture du calendrier au clic ;
+ * - la synchronisation entre la saisie clavier et le composant `DatePicker`.
  *
- * Il est construit avec `forwardRef` afin que `react-datepicker`
- * puisse accéder directement au véritable élément DOM de l’input.
+ * `forwardRef` est nécessaire car `react-datepicker` doit pouvoir accéder
+ * directement à l’élément HTML natif `<input>`.
  *
- * @param {Object} props - Propriétés injectées par `react-datepicker`.
+ * @component
+ * @param {Object} props - Propriétés injectées automatiquement par `react-datepicker`.
  * @param {string} [props.value] - Valeur actuellement affichée dans le champ.
- * @param {Function} [props.onClick] - Gestionnaire déclenché au clic sur l’input.
- * @param {Function} [props.onChange] - Gestionnaire déclenché lors de la saisie.
- * @param {Function} [props.onBlur] - Gestionnaire déclenché à la perte de focus.
+ * @param {Function} [props.onClick] - Fonction appelée lors du clic sur l’input.
+ * @param {Function} [props.onChange] - Fonction appelée lors de la saisie.
+ * @param {Function} [props.onBlur] - Fonction appelée à la perte de focus.
  * @param {string} [props.id] - Identifiant HTML du champ.
  * @param {string} [props.name] - Nom HTML du champ.
- * @param {string} [props.className] - Classe CSS appliquée à l’input.
- * @param {string} [props.placeholder] - Texte d’aide affiché si le champ est vide.
+ * @param {string} [props.className] - Classe CSS appliquée au champ.
+ * @param {string} [props.placeholder] - Texte indicatif affiché lorsque le champ est vide.
  * @param {React.Ref<HTMLInputElement>} ref - Référence transmise à l’input natif.
- * @returns {JSX.Element} Un input masqué compatible avec `react-datepicker`.
+ * @returns {JSX.Element} Champ masqué compatible avec `react-datepicker`.
  */
 const CustomDateInput = forwardRef(function CustomDateInput(
   { value, onClick, onChange, onBlur, id, name, className, placeholder },
@@ -65,46 +66,55 @@ const CustomDateInput = forwardRef(function CustomDateInput(
 });
 
 /**
- * Formulaire de création d’un employé.
+ * Page de création d’un employé.
  *
- * Ce composant gère :
- * - la saisie des informations personnelles
- * - la validation des champs textuels
- * - la saisie et la validation des dates via un DatePicker masqué
- * - le formatage de certaines valeurs
- * - l’enregistrement final dans le store Redux
+ * Ce composant gère l’ensemble du formulaire de création d’un employé :
+ * - saisie des informations personnelles ;
+ * - saisie de l’adresse ;
+ * - sélection de l’État américain ;
+ * - sélection du département ;
+ * - validation des champs texte ;
+ * - validation des dates via un hook personnalisé ;
+ * - formatage du code postal américain ;
+ * - création de l’objet employé ;
+ * - ajout de l’employé dans le store Redux ;
+ * - affichage d’une modale de succès après enregistrement.
  *
- * Les dates sont gérées via le hook réutilisable `useMaskedDateField`,
- * ce qui permet de mutualiser la logique de :
- * - saisie manuelle
- * - validation
- * - gestion des erreurs
- * - synchronisation avec le calendrier
- *
- * @returns {JSX.Element} Le formulaire complet de création d’un employé.
+ * @component
+ * @returns {JSX.Element} Formulaire complet de création d’un employé.
  */
 function CreateEmployee() {
+  // Permet de déclencher des actions Redux.
   const dispatch = useDispatch();
 
+  // États contrôlés des champs texte du formulaire.
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
+
+  // États contrôlés des listes de sélection.
   const [stateUS, setState] = useState("AL");
-  const [zipCode, setZipCode] = useState("");
   const [department, setDepartment] = useState("Sales");
+
+  // État contrôlé du code postal.
+  const [zipCode, setZipCode] = useState("");
+
+  // Contrôle l’affichage de la modale de confirmation.
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Stocke le nom de l’employé créé afin de l’afficher dans la modale.
   const [createdEmployeeName, setCreatedEmployeeName] = useState("");
 
   /**
    * Vérifie qu’une date de naissance est plausible.
    *
    * Règles appliquées :
-   * - la date ne peut pas être dans le futur
-   * - la date ne peut pas être antérieure à 120 ans avant aujourd’hui
+   * - la date ne peut pas être dans le futur ;
+   * - la date ne peut pas être antérieure à 120 ans.
    *
-   * @param {Date} date - Date à contrôler.
-   * @returns {boolean} `true` si la date est cohérente, sinon `false`.
+   * @param {Date} date - Date de naissance à contrôler.
+   * @returns {boolean} `true` si la date est plausible, sinon `false`.
    */
   function isPlausibleBirthDate(date) {
     if (!date) return false;
@@ -120,11 +130,11 @@ function CreateEmployee() {
    * Vérifie qu’une date d’entrée dans l’entreprise est plausible.
    *
    * Règles appliquées :
-   * - la date ne peut pas être trop ancienne
-   * - la date ne peut pas être trop éloignée dans le futur
+   * - la date ne peut pas être trop ancienne ;
+   * - la date ne peut pas être trop éloignée dans le futur.
    *
-   * @param {Date} date - Date à contrôler.
-   * @returns {boolean} `true` si la date est cohérente, sinon `false`.
+   * @param {Date} date - Date d’entrée à contrôler.
+   * @returns {boolean} `true` si la date est plausible, sinon `false`.
    */
   function isPlausibleStartDate(date) {
     if (!date) return false;
@@ -137,16 +147,22 @@ function CreateEmployee() {
     return date >= minDate && date <= maxDate;
   }
 
+  // Dates limites utilisées pour borner les calendriers.
   const today = new Date();
+
+  // Date maximale autorisée pour une date d’entrée : aujourd’hui + 10 ans.
   const future = new Date(today);
   future.setFullYear(today.getFullYear() + 10);
 
+  // Date minimale autorisée pour une date d’entrée.
   const minYear = new Date(today.getFullYear() - 80, 0, 1);
 
+  // Bornes utilisées pour le calendrier de date de naissance.
   const maxBirthDate = new Date();
   const minBirthDate = new Date();
   minBirthDate.setFullYear(maxBirthDate.getFullYear() - 76);
 
+  // Champ de date de naissance géré par un hook personnalisé.
   const birthDateField = useMaskedDateField({
     requiredMessage: "Date of birth is required",
     invalidMessage: "Enter a valid date in mm/dd/yyyy format",
@@ -154,14 +170,16 @@ function CreateEmployee() {
     notAllowedMessage: "Enter a plausible birth date",
   });
 
+  // Champ de date d’entrée géré par un hook personnalisé.
   const startDateField = useMaskedDateField({
     initialDate: new Date(),
     requiredMessage: "Start date is required",
-    invalidMessage: "Enter a valid date in mm/mm/yyyy format",
+    invalidMessage: "Enter a valid date in mm/dd/yyyy format",
     isDateAllowed: isPlausibleStartDate,
     notAllowedMessage: "Enter a plausible start date",
   });
 
+  // Centralise les messages d’erreur des champs standards.
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -176,10 +194,10 @@ function CreateEmployee() {
    * Réinitialise l’ensemble du formulaire.
    *
    * Cette fonction :
-   * - vide les champs texte
-   * - remet les sélecteurs à leur valeur par défaut
-   * - réinitialise les champs de date via leur hook dédié
-   * - efface tous les messages d’erreur
+   * - vide les champs texte ;
+   * - remet les sélecteurs à leurs valeurs par défaut ;
+   * - réinitialise les champs de date ;
+   * - supprime tous les messages d’erreur.
    *
    * @returns {void}
    */
@@ -207,14 +225,11 @@ function CreateEmployee() {
   }
 
   /**
-   * Valide un champ standard selon son nom.
-   *
-   * Cette fonction centralise les règles de validation
-   * des champs texte et des sélecteurs.
+   * Valide un champ standard du formulaire selon son nom.
    *
    * @param {string} fieldName - Nom du champ à valider.
    * @param {*} fieldValue - Valeur actuelle du champ.
-   * @returns {string} Une chaîne vide si le champ est valide, sinon un message d’erreur.
+   * @returns {string} Message d’erreur ou chaîne vide si le champ est valide.
    */
   function validateField(fieldName, fieldValue) {
     switch (fieldName) {
@@ -289,11 +304,12 @@ function CreateEmployee() {
   /**
    * Valide l’ensemble du formulaire avant soumission.
    *
-   * Cette validation combine :
-   * - les champs standard (texte, sélecteurs)
-   * - les champs de date pilotés par les hooks dédiés
+   * Combine :
+   * - la validation des champs standards ;
+   * - la validation de la date de naissance ;
+   * - la validation de la date d’entrée.
    *
-   * @returns {boolean} `true` si le formulaire est entièrement valide, sinon `false`.
+   * @returns {boolean} `true` si le formulaire est valide, sinon `false`.
    */
   function validateForm() {
     const newErrors = {
@@ -319,15 +335,15 @@ function CreateEmployee() {
   }
 
   /**
-   * Formate une chaîne de caractères en nom propre.
+   * Formate une chaîne en nom propre.
    *
-   * Exemple :
+   * Exemples :
    * - `jean` devient `Jean`
    * - `jean-paul` devient `Jean-Paul`
    * - `o'connor` devient `O'Connor`
    *
    * @param {string} value - Texte à formater.
-   * @returns {string} Texte formaté avec une capitalisation adaptée.
+   * @returns {string} Texte formaté.
    */
   function formatName(value) {
     if (!value) return "";
@@ -338,16 +354,18 @@ function CreateEmployee() {
   }
 
   /**
-   * Construit l’objet employé puis l’enregistre dans le store Redux.
+   * Construit l’objet employé puis l’enregistre dans Redux.
    *
-   * Les dates sont converties au format `MM/DD/YYYY`
-   * avant stockage.
+   * Un identifiant de secours est prévu, car `crypto.randomUUID`
+   * peut être indisponible sur certains navigateurs mobiles.
    *
    * @returns {void}
    */
   function saveEmployee() {
     const employee = {
-      id: crypto.randomUUID(),
+      id:
+        crypto.randomUUID?.() ||
+        `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       firstName: formatName(firstName.trim()),
       lastName: formatName(lastName.trim()),
       dateOfBirth: birthDateField.date
@@ -360,18 +378,25 @@ function CreateEmployee() {
       stateUS,
       zipCode: zipCode.trim(),
     };
+
+    // Ajoute le nouvel employé dans le store Redux.
     dispatch(addEmployee(employee));
-    setCreatedEmployeeName(`${employee.firstName}  ${employee.lastName}`);
+
+    // Prépare le texte affiché dans la modale de succès.
+    setCreatedEmployeeName(`${employee.firstName} ${employee.lastName}`);
+
+    // Ouvre la modale de confirmation.
     setIsModalOpen(true);
-    //Pas de reset du formulaire dans la version initiale. A voir
+
+    // Réinitialise le formulaire après l’enregistrement.
     resetForm();
   }
 
   /**
-   * Gère la validation d’un champ standard à la perte de focus.
+   * Valide un champ standard à la perte de focus.
    *
    * @param {string} fieldName - Nom du champ concerné.
-   * @param {*} fieldValue - Valeur courante du champ.
+   * @param {*} fieldValue - Valeur actuelle du champ.
    * @returns {void}
    */
   function handleBlurField(fieldName, fieldValue) {
@@ -386,13 +411,13 @@ function CreateEmployee() {
   /**
    * Gère la soumission du formulaire.
    *
-   * Avant l’enregistrement :
-   * - empêche le rechargement de la page
-   * - force la validation finale des champs date
-   * - valide l’ensemble du formulaire
-   * - enregistre l’employé si tout est correct
+   * Étapes :
+   * - empêche le rechargement de la page ;
+   * - force la validation finale des champs de date ;
+   * - valide tous les champs standards ;
+   * - enregistre l’employé uniquement si le formulaire est valide.
    *
-   * @param {React.FormEvent<HTMLFormElement>} e - Événement de soumission du formulaire.
+   * @param {React.FormEvent<HTMLFormElement>} e - Événement de soumission.
    * @returns {void}
    */
   function handleSubmit(e) {
@@ -407,16 +432,11 @@ function CreateEmployee() {
   }
 
   /**
-   * Formate le code postal américain pendant la saisie.
+   * Formate automatiquement le code postal américain pendant la saisie.
    *
    * Formats acceptés :
    * - `12345`
    * - `12345-6789`
-   *
-   * Cette fonction :
-   * - supprime les caractères non autorisés
-   * - insère automatiquement le tiret au bon moment
-   * - efface l’erreur du champ si la saisie reprend
    *
    * @param {React.ChangeEvent<HTMLInputElement>} e - Événement de saisie.
    * @returns {void}
@@ -424,8 +444,10 @@ function CreateEmployee() {
   function handleZipCodeChange(e) {
     let value = e.target.value;
 
+    // Supprime tous les caractères non numériques, sauf le tiret.
     value = value.replace(/[^\d-]/g, "");
 
+    // Récupère uniquement les chiffres pour reconstruire le format.
     const digitsOnly = value.replace(/\D/g, "");
 
     if (digitsOnly.length <= 5) {
@@ -436,6 +458,7 @@ function CreateEmployee() {
 
     setZipCode(value);
 
+    // Efface l’erreur dès que l’utilisateur corrige la saisie.
     if (errors.zipCode) {
       setErrors((prev) => ({
         ...prev,
@@ -444,6 +467,14 @@ function CreateEmployee() {
     }
   }
 
+  /**
+   * Diminue la valeur numérique du code postal.
+   *
+   * Si le code contient une extension ZIP+4,
+   * seule l’extension est décrémentée.
+   *
+   * @returns {void}
+   */
   function decrement() {
     setZipCode((prev) => {
       if (prev.includes("-")) {
@@ -456,6 +487,14 @@ function CreateEmployee() {
     });
   }
 
+  /**
+   * Augmente la valeur numérique du code postal.
+   *
+   * Si le code contient une extension ZIP+4,
+   * seule l’extension est incrémentée.
+   *
+   * @returns {void}
+   */
   function increment() {
     setZipCode((prev) => {
       if (prev.includes("-")) {
@@ -467,11 +506,13 @@ function CreateEmployee() {
     });
   }
 
+  // Transforme les États américains en options compatibles avec react-select.
   const stateOptions = statesUS.map((s) => ({
     value: s.abbreviation,
     label: s.name,
   }));
 
+  // Transforme les départements en options compatibles avec react-select.
   const departmentOptions = departments.map((d) => ({
     value: d.name,
     label: d.name,
@@ -489,6 +530,7 @@ function CreateEmployee() {
         className={styles.createemployee__form}
         aria-labelledby="form-title"
       >
+        {/* Groupe des champs d’identité. */}
         <div className={styles.identity}>
           <div className={styles.identity__group}>
             <label htmlFor="firstName" className={styles.identity__group_label}>
@@ -543,6 +585,7 @@ function CreateEmployee() {
           </div>
         </div>
 
+        {/* Groupe des champs date. */}
         <div className={styles.date}>
           <div className={styles.date__group}>
             <label htmlFor="dateOfBirth" className={styles.date__group_label}>
@@ -632,6 +675,7 @@ function CreateEmployee() {
           </div>
         </div>
 
+        {/* Fieldset utilisé pour regrouper sémantiquement les champs d’adresse. */}
         <fieldset className={styles.address}>
           <legend className={styles.address__legend}>Address</legend>
 
@@ -746,6 +790,7 @@ function CreateEmployee() {
           </div>
         </fieldset>
 
+        {/* Sélection du département de l’employé. */}
         <div>
           <label htmlFor="department" className={styles.identity__group_label}>
             Department
@@ -772,6 +817,8 @@ function CreateEmployee() {
           Save
         </button>
       </form>
+
+      {/* Modale affichée après la création réussie d’un employé. */}
       <HRnet_modal
         isOpen={isModalOpen}
         title={`Employee Created! ( ${createdEmployeeName} )`}
@@ -781,6 +828,8 @@ function CreateEmployee() {
         fontFamily="Avenir, Helvetica, Arial, sans-serif"
         closeButtonClassName={styles.darkClose}
         closeIcon={<X size={25} />}
+        overlayPosition="fixed"
+        mobileMode="bottom-sheet"
       />
     </section>
   );

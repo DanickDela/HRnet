@@ -1,28 +1,3 @@
-/**
- * Header component.
- *
- * This component represents the main navigation bar of the application.
- * It displays:
- * - The application logo
- * - Navigation links (Home, Profile, Login)
- * - User information when authenticated
- * - A sign-out button
- *
- * Features:
- * - Conditional rendering based on authentication state
- * - Displays the user's first name when logged in
- * - Handles user logout by clearing authentication and user state
- * - Redirects to the home page after logout
- *
- * Redux:
- * - Reads authentication token from auth slice
- * - Reads user first name from user slice
- * - Dispatches actions to clear token and user profile
- *
- * @component
- * @returns {JSX.Element} The header navigation bar
- */
-
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "../../assets/HRnet.svg";
@@ -39,6 +14,36 @@ import { clearToken } from "../../store/authSlice";
 import { clearUserProfile } from "../../store/userSlice";
 import styles from "./header.module.scss";
 
+/**
+ * Composant d’en-tête principal de l’application.
+ *
+ * Ce composant affiche la barre de navigation globale de HRnet.
+ *
+ * Il gère :
+ * - l’affichage du logo de l’application ;
+ * - le titre principal ;
+ * - les liens de navigation ;
+ * - l’affichage conditionnel selon l’état d’authentification ;
+ * - l’affichage du prénom de l’utilisateur connecté ;
+ * - la déconnexion de l’utilisateur ;
+ * - l’ouverture et la fermeture du menu burger sur mobile.
+ *
+ * Fonctionnement :
+ * - si l’utilisateur est connecté, les liens vers la création et la liste
+ *   des employés sont affichés ;
+ * - si l’utilisateur n’est pas connecté, seul le lien de connexion apparaît ;
+ * - lors de la déconnexion, le token et le profil utilisateur sont supprimés
+ *   du store Redux, puis l’utilisateur est redirigé vers l’accueil.
+ *
+ * Redux :
+ * - lit le token depuis le slice `auth` ;
+ * - lit le prénom depuis le slice `user` ;
+ * - déclenche `clearToken` pour supprimer l’authentification ;
+ * - déclenche `clearUserProfile` pour nettoyer le profil utilisateur.
+ *
+ * @component
+ * @returns {JSX.Element} Barre de navigation principale de l’application.
+ */
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

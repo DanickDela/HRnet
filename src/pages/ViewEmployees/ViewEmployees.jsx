@@ -9,35 +9,71 @@ import "@delaroche/hrnet-modal/style.css";
 import normalizeSearch from "../../utils/normalizeSearch";
 import { formatIsoUS } from "../../hooks/useMaskedDateFieldUs";
 /**
- * Affiche la liste des employés avec recherche, tri, sélection et suppression.
+ * Page d’affichage des employés.
  *
- * Ce composant :
- * - récupère les employés depuis le store Redux ;
- * - filtre les employés avec une recherche globale normalisée ;
- * - formate les dates ISO au format américain ;
- * - ajoute un index visuel pour les lignes alternées ;
- * - affiche une modale de confirmation avant suppression.
+ * Ce composant permet de consulter, filtrer, sélectionner et supprimer
+ * les employés enregistrés dans le store Redux.
+ *
+ * Fonctionnalités principales :
+ * - récupération des employés depuis Redux ;
+ * - recherche globale insensible à la casse et aux accents ;
+ * - filtrage multi-mots ;
+ * - formatage des dates ISO au format américain ;
+ * - sélection manuelle de lignes via cases à cocher accessibles ;
+ * - styles alternés sur les lignes filtrées ;
+ * - suppression sécurisée avec modale de confirmation ;
+ * - affichage du tableau via un composant DataTable réutilisable.
  *
  * @component
- * @returns {JSX.Element} Page de liste des employés.
+ * @returns {JSX.Element} Page contenant la liste des employés.
  */
 function ViewEmployees() {
+  // Permet de déclencher des actions Redux.
   const dispatch = useDispatch();
+
+  // Récupère la liste des employés depuis le store Redux.
   const employees = useSelector((state) => state.employees.employees);
+
+  // Contrôle l’ouverture et la fermeture de la modale de confirmation.
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Stocke l’employé actuellement sélectionné pour suppression.
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
+  // Stocke la valeur saisie dans le champ de recherche.
   const [search, setSearch] = useState("");
 
+  // Stocke les identifiants des employés sélectionnés dans le tableau.
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  /**
+   * Ouvre la modale de confirmation pour l’employé ciblé.
+   *
+   * @param {Object} employee - Employé sélectionné.
+   * @returns {void}
+   */
   function handleDeleteClick(employee) {
     setSelectedEmployee(employee);
     setIsModalOpen(true);
   }
+
+  /**
+   * Annule la suppression et réinitialise l’employé sélectionné.
+   *
+   * @returns {void}
+   */
   function cancelDelete() {
     setIsModalOpen(false);
     setSelectedEmployee(null);
   }
 
+  /**
+   * Confirme la suppression de l’employé sélectionné.
+   *
+   * Si aucun employé n’est sélectionné, la fonction s’arrête.
+   *
+   * @returns {void}
+   */
   function confirmDelete() {
     if (!selectedEmployee) return;
 
@@ -46,9 +82,15 @@ function ViewEmployees() {
     setSelectedEmployee(null);
   }
 
-  //ajout de la colonne sans utiliser "selectableRows" de DateTable pour éviter le problème d'accesibilité
-
-  const [selectedRows, setSelectedRows] = useState([]);
+  /**
+   * Ajoute ou retire un employé de la sélection manuelle.
+   *
+   * Cette sélection personnalisée remplace `selectableRows`
+   * de DataTable afin de garder un meilleur contrôle sur l’accessibilité.
+   *
+   * @param {string} employeeId - Identifiant unique de l’employé.
+   * @returns {void}
+   */
   function toggleEmployee(employeeId) {
     setSelectedRows((prev) =>
       prev.includes(employeeId)
@@ -56,7 +98,19 @@ function ViewEmployees() {
         : [...prev, employeeId],
     );
   }
+
+  /**
+   * Configuration des colonnes du tableau.
+   *
+   * Chaque colonne définit :
+   * - un identifiant ;
+   * - un libellé d’en-tête ;
+   * - un sélecteur de donnée ;
+   * - l’activation éventuelle du tri ;
+   * - un formatage personnalisé si nécessaire.
+   */
   const columns = [
+    // Colonne de sélection accessible.
     {
       id: "select",
       name: <span className={styles.headerCell}>Select</span>,
@@ -69,8 +123,9 @@ function ViewEmployees() {
         />
       ),
       ignoreRowClick: true,
-      //width: "80px",
     },
+
+    // Colonnes principales triables.
     {
       id: "firstName",
       name: <span className={styles.headerCell}>First Name</span>,
@@ -78,6 +133,7 @@ function ViewEmployees() {
       sortable: true,
       wrap: true,
     },
+
     {
       id: "lastName",
       name: <span className={styles.headerCell}>Last Name</span>,
@@ -86,6 +142,7 @@ function ViewEmployees() {
       wrap: true,
     },
 
+    // Date de début formatée en MM/DD/YYYY à l’affichage.
     {
       id: "startDate",
       name: <span className={styles.headerCell}>Start Date</span>,
@@ -94,6 +151,7 @@ function ViewEmployees() {
       format: (row) => formatIsoUS(row.startDate),
       wrap: true,
     },
+
     {
       id: "department",
       name: <span className={styles.headerCell}>Department</span>,
@@ -101,6 +159,8 @@ function ViewEmployees() {
       sortable: true,
       wrap: true,
     },
+
+    // Date de naissance formatée en MM/DD/YYYY à l’affichage.
     {
       id: "dateOfBirth",
       name: <span className={styles.headerCell}>Date of Birth</span>,
@@ -115,8 +175,8 @@ function ViewEmployees() {
       name: <span className={styles.headerCell}>Street</span>,
       selector: (row) => row.street,
       sortable: true,
-      // wrap: true,
     },
+
     {
       id: "city",
       name: <span className={styles.headerCell}>City</span>,
@@ -124,6 +184,7 @@ function ViewEmployees() {
       sortable: true,
       wrap: true,
     },
+
     {
       id: "stateUS",
       name: <span className={styles.headerCell}>State</span>,
@@ -131,6 +192,7 @@ function ViewEmployees() {
       sortable: true,
       wrap: true,
     },
+
     {
       id: "zipCode",
       name: <span className={styles.headerCell}>Zip Code</span>,
@@ -138,6 +200,8 @@ function ViewEmployees() {
       sortable: true,
       wrap: true,
     },
+
+    // Colonne d’action pour lancer la suppression.
     {
       id: "actions",
       name: <span className={styles.headerCell}>Actions</span>,
@@ -155,6 +219,15 @@ function ViewEmployees() {
     },
   ];
 
+  /**
+   * Styles personnalisés appliqués au composant DataTable.
+   *
+   * Ils permettent d’améliorer :
+   * - la hauteur des lignes ;
+   * - le retour à la ligne des en-têtes ;
+   * - la lisibilité des cellules ;
+   * - la gestion des contenus longs.
+   */
   const customStyles = {
     rows: {
       style: {
@@ -184,6 +257,12 @@ function ViewEmployees() {
     },
   };
 
+  /**
+   * Styles conditionnels des lignes du tableau.
+   *
+   * Utilise l’index visuel `rowIndex` ajouté après filtrage,
+   * afin de conserver une alternance correcte même après recherche.
+   */
   const conditionalRowStyles = [
     {
       when: (row) => row.rowIndex % 2 === 0,
@@ -193,15 +272,27 @@ function ViewEmployees() {
     },
   ];
 
+  /**
+   * Liste filtrée des employés.
+   *
+   * `useMemo` évite de recalculer le filtrage à chaque rendu
+   * si `employees` et `search` n’ont pas changé.
+   *
+   * La recherche est :
+   * - insensible à la casse ;
+   * - insensible aux accents ;
+   * - compatible avec plusieurs mots ;
+   * - appliquée à plusieurs champs de l’employé.
+   */
   const filteredEmployees = useMemo(() => {
-    // Normalize the user search to make matching case-insensitive and accent-insensitive.
+    // Normalise la saisie utilisateur.
     const normalizedSearch = normalizeSearch(search);
 
-    // If the search field is empty, keep the full employee list.
+    // Si le champ est vide, tous les employés sont conservés.
     const filtered = !normalizedSearch
       ? employees
       : employees.filter((employee) => {
-          // Build one searchable string from the main employee fields.
+          // Construit une chaîne unique contenant les champs recherchables.
           const searchableText = normalizeSearch(
             [
               employee.firstName,
@@ -218,20 +309,26 @@ function ViewEmployees() {
               .join(" "),
           );
 
-          // Split the search into words so "Joseph Petit" and "Petit Joseph" both match.
+          // Découpe la recherche en mots indépendants.
           const words = normalizedSearch.split(/\s+/);
 
-          // Every searched word must exist somewhere in the employee searchable text.
+          // Tous les mots saisis doivent être présents dans le texte recherché.
           return words.every((word) => searchableText.includes(word));
         });
 
-    // Add a visual index after filtering for alternating row styles.
+    // Ajoute un index visuel utilisé pour les styles alternés.
     return filtered.map((emp, i) => ({
       ...emp,
       rowIndex: i,
     }));
   }, [employees, search]);
 
+  /**
+   * Sous-en-tête du tableau contenant le champ de recherche.
+   *
+   * Le champ est relié à un texte d’aide invisible
+   * pour améliorer l’accessibilité avec les lecteurs d’écran.
+   */
   const subHeaderComponent = (
     <div className={styles.listemployees__filter}>
       <label
@@ -240,6 +337,7 @@ function ViewEmployees() {
       >
         Search
       </label>
+
       <input
         id="employee-search"
         type="text"
@@ -249,6 +347,7 @@ function ViewEmployees() {
         className={styles.listemployees__filter_input}
         aria-describedby="employee-search-help"
       />
+
       <p id="employee-search-help" className={styles.srOnly}>
         Search employees by first name, last name, department, city, state or
         zip code.
@@ -271,6 +370,7 @@ function ViewEmployees() {
           subHeaderComponent={subHeaderComponent}
         />
       </div>
+
       <HRnet_modal
         isOpen={isModalOpen}
         title="Delete employee"
@@ -291,7 +391,8 @@ function ViewEmployees() {
         cancelText="Cancel"
         confirmText="Delete"
         bodyClassName={styles.test}
-      ></HRnet_modal>
+        mobileMode="bottom-sheet"
+      />
     </section>
   );
 }
