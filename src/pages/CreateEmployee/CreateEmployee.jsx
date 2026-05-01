@@ -17,6 +17,12 @@ import { InputMask } from "@react-input/mask";
 import { X, Plus, Minus } from "lucide-react";
 import HRnet_modal from "@delaroche/hrnet-modal";
 import "@delaroche/hrnet-modal/style.css";
+import {
+  formatName,
+  formatZipCode,
+  incrementZipCode,
+  decrementZipCode,
+} from "../../utils/employeesFormatter";
 
 /**
  * Champ de saisie personnalisé utilisé par `react-datepicker`.
@@ -84,68 +90,16 @@ const CustomDateInput = forwardRef(function CustomDateInput(
  * @returns {JSX.Element} Formulaire complet de création d’un employé.
  */
 function CreateEmployee() {
-  // Permet de déclencher des actions Redux.
   const dispatch = useDispatch();
-
-  // États contrôlés des champs texte du formulaire.
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
-
-  // États contrôlés des listes de sélection.
   const [stateUS, setState] = useState("AL");
   const [department, setDepartment] = useState("Sales");
-
-  // État contrôlé du code postal.
   const [zipCode, setZipCode] = useState("");
-
-  // Contrôle l’affichage de la modale de confirmation.
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Stocke le nom de l’employé créé afin de l’afficher dans la modale.
   const [createdEmployeeName, setCreatedEmployeeName] = useState("");
-
-  /**
-   * Vérifie qu’une date de naissance est plausible.
-   *
-   * Règles appliquées :
-   * - la date ne peut pas être dans le futur ;
-   * - la date ne peut pas être antérieure à 120 ans.
-   *
-   * @param {Date} date - Date de naissance à contrôler.
-   * @returns {boolean} `true` si la date est plausible, sinon `false`.
-   */
-  function isPlausibleBirthDate(date) {
-    if (!date) return false;
-
-    const today = new Date();
-    const oldestAllowedDate = new Date();
-    oldestAllowedDate.setFullYear(today.getFullYear() - 120);
-
-    return date <= today && date >= oldestAllowedDate;
-  }
-
-  /**
-   * Vérifie qu’une date d’entrée dans l’entreprise est plausible.
-   *
-   * Règles appliquées :
-   * - la date ne peut pas être trop ancienne ;
-   * - la date ne peut pas être trop éloignée dans le futur.
-   *
-   * @param {Date} date - Date d’entrée à contrôler.
-   * @returns {boolean} `true` si la date est plausible, sinon `false`.
-   */
-  function isPlausibleStartDate(date) {
-    if (!date) return false;
-
-    const today = new Date();
-    const minDate = new Date(today.getFullYear() - 80, 0, 1);
-    const maxDate = new Date(today);
-    maxDate.setFullYear(today.getFullYear() + 10);
-
-    return date >= minDate && date <= maxDate;
-  }
 
   // Dates limites utilisées pour borner les calendriers.
   const today = new Date();
@@ -190,6 +144,16 @@ function CreateEmployee() {
     department: "",
   });
 
+  const stateOptions = statesUS.map((s) => ({
+    value: s.abbreviation,
+    label: s.name,
+  }));
+
+  const departmentOptions = departments.map((d) => ({
+    value: d.name,
+    label: d.name,
+  }));
+
   /**
    * Réinitialise l’ensemble du formulaire.
    *
@@ -223,7 +187,25 @@ function CreateEmployee() {
       department: "",
     });
   }
+  /**
+   * Vérifie qu’une date de naissance est plausible.
+   *
+   * Règles appliquées :
+   * - la date ne peut pas être dans le futur ;
+   * - la date ne peut pas être antérieure à 120 ans.
+   *
+   * @param {Date} date - Date de naissance à contrôler.
+   * @returns {boolean} `true` si la date est plausible, sinon `false`.
+   */
+  function isPlausibleBirthDate(date) {
+    if (!date) return false;
 
+    const today = new Date();
+    const oldestAllowedDate = new Date();
+    oldestAllowedDate.setFullYear(today.getFullYear() - 120);
+
+    return date <= today && date >= oldestAllowedDate;
+  }
   /**
    * Valide un champ standard du formulaire selon son nom.
    *
@@ -302,6 +284,27 @@ function CreateEmployee() {
   }
 
   /**
+   * Vérifie qu’une date d’entrée dans l’entreprise est plausible.
+   *
+   * Règles appliquées :
+   * - la date ne peut pas être trop ancienne ;
+   * - la date ne peut pas être trop éloignée dans le futur.
+   *
+   * @param {Date} date - Date d’entrée à contrôler.
+   * @returns {boolean} `true` si la date est plausible, sinon `false`.
+   */
+  function isPlausibleStartDate(date) {
+    if (!date) return false;
+
+    const today = new Date();
+    const minDate = new Date(today.getFullYear() - 80, 0, 1);
+    const maxDate = new Date(today);
+    maxDate.setFullYear(today.getFullYear() + 10);
+
+    return date >= minDate && date <= maxDate;
+  }
+
+  /**
    * Valide l’ensemble du formulaire avant soumission.
    *
    * Combine :
@@ -332,25 +335,6 @@ function CreateEmployee() {
     const startDateIsValid = !startDateField.error && !!startDateField.date;
 
     return standardFieldsAreValid && birthDateIsValid && startDateIsValid;
-  }
-
-  /**
-   * Formate une chaîne en nom propre.
-   *
-   * Exemples :
-   * - `jean` devient `Jean`
-   * - `jean-paul` devient `Jean-Paul`
-   * - `o'connor` devient `O'Connor`
-   *
-   * @param {string} value - Texte à formater.
-   * @returns {string} Texte formaté.
-   */
-  function formatName(value) {
-    if (!value) return "";
-
-    return value
-      .toLowerCase()
-      .replace(/(^|\s|-|')\w/g, (char) => char.toUpperCase());
   }
 
   /**
@@ -444,17 +428,7 @@ function CreateEmployee() {
   function handleZipCodeChange(e) {
     let value = e.target.value;
 
-    // Supprime tous les caractères non numériques, sauf le tiret.
-    value = value.replace(/[^\d-]/g, "");
-
-    // Récupère uniquement les chiffres pour reconstruire le format.
-    const digitsOnly = value.replace(/\D/g, "");
-
-    if (digitsOnly.length <= 5) {
-      value = digitsOnly;
-    } else {
-      value = `${digitsOnly.slice(0, 5)}-${digitsOnly.slice(5, 9)}`;
-    }
+    value = formatZipCode(value);
 
     setZipCode(value);
 
@@ -466,57 +440,6 @@ function CreateEmployee() {
       }));
     }
   }
-
-  /**
-   * Diminue la valeur numérique du code postal.
-   *
-   * Si le code contient une extension ZIP+4,
-   * seule l’extension est décrémentée.
-   *
-   * @returns {void}
-   */
-  function decrement() {
-    setZipCode((prev) => {
-      if (prev.includes("-")) {
-        const [main, ext] = prev.split("-");
-        const nextExt = Math.max(0, Number(ext || 0) - 1);
-        return `${main}-${nextExt}`;
-      }
-
-      return String(Math.max(0, Number(prev || 0) - 1));
-    });
-  }
-
-  /**
-   * Augmente la valeur numérique du code postal.
-   *
-   * Si le code contient une extension ZIP+4,
-   * seule l’extension est incrémentée.
-   *
-   * @returns {void}
-   */
-  function increment() {
-    setZipCode((prev) => {
-      if (prev.includes("-")) {
-        const [main, ext] = prev.split("-");
-        return `${main}-${Math.min(9999, Number(ext || 0) + 1)}`;
-      }
-
-      return String(Math.min(99999, Number(prev || 0) + 1));
-    });
-  }
-
-  // Transforme les États américains en options compatibles avec react-select.
-  const stateOptions = statesUS.map((s) => ({
-    value: s.abbreviation,
-    label: s.name,
-  }));
-
-  // Transforme les départements en options compatibles avec react-select.
-  const departmentOptions = departments.map((d) => ({
-    value: d.name,
-    label: d.name,
-  }));
 
   return (
     <section className={styles.createemployee}>
@@ -765,7 +688,7 @@ function CreateEmployee() {
                 <div className={styles.zipcode__wrapper}>
                   <button
                     type="button"
-                    onClick={decrement}
+                    onClick={() => setZipCode((prev) => decrementZipCode(prev))}
                     className={styles.zipcode__wrapper_button}
                     aria-label="Decrease value"
                   >
@@ -773,7 +696,7 @@ function CreateEmployee() {
                   </button>
                   <button
                     type="button"
-                    onClick={increment}
+                    onClick={() => setZipCode((prev) => incrementZipCode(prev))}
                     className={styles.zipcode__wrapper_button}
                     aria-label="Increase value"
                   >

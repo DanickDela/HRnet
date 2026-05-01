@@ -1,6 +1,31 @@
 @use "../../styles/mixins";
 @use "../../styles/variables";
-
+/**
+ * Styles du composant CreateEmployee.
+ *
+ * Ce fichier gère la mise en page complète du formulaire de création
+ * d’un employé dans l’application HRnet.
+ *
+ * Il utilise :
+ * - la méthodologie BEM pour structurer les classes
+ * - les variables SCSS globales pour les couleurs, espacements et ombres
+ * - les mixins pour mutualiser les styles de champs et boutons
+ * - des media queries pour l’adaptation mobile
+ * - des sélecteurs :global pour personnaliser les composants externes
+ *   comme react-datepicker et react-select
+ *
+ * Sections principales :
+ * - .createemployee : conteneur principal du formulaire
+ * - .identity : champs d’identité de l’employé
+ * - .date : champs de dates avec datepicker
+ * - .zipcode : champ ZIP avec boutons intégrés
+ * - .address : groupe des informations d’adresse
+ * - .calendar : personnalisation globale de react-datepicker
+ * - .state / .department : personnalisation de react-select
+ * - .error : affichage des messages d’erreur
+ *
+ * @module createemployee.module.scss
+ */
 .createemployee {
   width: 100%;
   max-width: 720px;

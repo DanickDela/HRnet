@@ -1,6 +1,46 @@
 @use "../../styles/variables";
 @use "../../styles/mixins";
-
+/**
+ * Styles du composant ListEmployees.
+ *
+ * Ce fichier gère l’interface d’affichage des employés dans HRnet.
+ * Il structure la page contenant :
+ * - le titre principal
+ * - la zone de recherche / filtrage
+ * - le tableau DataTable
+ * - les actions utilisateur (suppression, sélection)
+ * - les adaptations responsive mobile
+ *
+ * Technologies ciblées :
+ * - SCSS Modules
+ * - Méthodologie BEM
+ * - react-data-table-component
+ *
+ * Dépendances :
+ * - variables.scss : couleurs, typographies, breakpoints, poids de police
+ * - mixins.scss : champs formulaire, boutons réutilisables
+ *
+ * Sections principales :
+ * - .listemployees : conteneur global
+ * - .listemployees__filter : zone de recherche
+ * - .listemployees__table : wrapper scroll horizontal
+ * - .listemployees__delete : bouton suppression
+ * - .headerCell : en-têtes multilignes
+ * - :global(.rdt_*) : surcharge du composant DataTable
+ * - .srOnly : accessibilité lecteur d’écran
+ *
+ * Responsive :
+ * - adaptation mobile via variables.$mobile
+ * - réduction colonnes
+ * - ajustement typographies
+ * - scroll horizontal conservé
+ *
+ * Accessibilité :
+ * - focus visible clavier
+ * - classe masquée lecteur écran
+ *
+ * @module listeemployees.module.scss
+ */
 .listemployees {
   width: 100%;
   max-width: 1050px;
