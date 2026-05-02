@@ -269,4 +269,10 @@ Danick Delaroche
 
 ## Licence
 
+# Data
+
+Au chargement, génération aléatoire de 100 employés pour des besoins de test et de démonstration
+
+## Licence
+
 Projet open-source disponible à des fins pédagogiques.

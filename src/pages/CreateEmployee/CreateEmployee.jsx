@@ -751,8 +751,7 @@ function CreateEmployee() {
         fontFamily="Avenir, Helvetica, Arial, sans-serif"
         closeButtonClassName={styles.darkClose}
         closeIcon={<X size={25} />}
-        overlayPosition="fixed"
-        mobileMode="bottom-sheet"
+        mobileMode="modal"
       />
     </section>
   );

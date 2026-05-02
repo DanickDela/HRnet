@@ -391,7 +391,7 @@ function ViewEmployees() {
         cancelText="Cancel"
         confirmText="Delete"
         bodyClassName={styles.test}
-        mobileMode="bottom-sheet"
+        mobileMode="modal"
       />
     </section>
   );
