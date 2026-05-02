@@ -7,7 +7,7 @@ import { generateEmployees } from "../data/generateEmployees";
  *
  * @type {Array<Object>}
  */
-const defaultEmployees = generateEmployees(0);
+const defaultEmployees = generateEmployees(100);
 
 /**
  * État Redux du slice employees.

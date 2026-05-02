@@ -526,6 +526,8 @@ function CreateEmployee() {
               onCalendarClose={() => birthDateField.setIsOpen(false)}
               onInputClick={() => birthDateField.setIsOpen(true)}
               onChange={birthDateField.handleDatePickerChange}
+              onMonthChange={birthDateField.handleDatePickerChange}
+              onYearChange={birthDateField.handleDatePickerChange}
               onChangeRaw={birthDateField.handleInputChange}
               onBlur={birthDateField.handleBlur}
               popperPlacement="bottom-start"
@@ -569,6 +571,8 @@ function CreateEmployee() {
               onCalendarClose={() => startDateField.setIsOpen(false)}
               onInputClick={() => startDateField.setIsOpen(true)}
               onChange={startDateField.handleDatePickerChange}
+              onMonthChange={startDateField.handleDatePickerChange}
+              onYearChange={startDateField.handleDatePickerChange}
               onChangeRaw={startDateField.handleInputChange}
               onBlur={startDateField.handleBlur}
               popperPlacement="bottom-start"
