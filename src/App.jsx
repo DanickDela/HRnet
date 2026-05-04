@@ -7,7 +7,6 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
 import { fetchUserProfile, clearUserProfile } from "./store/userSlice";
-import { loadEmployees } from "./store/employeesSlice";
 
 import styles from "../src/styles/app.module.scss";
 
@@ -62,9 +61,6 @@ function App() {
   // Récupère le statut de chargement du profil utilisateur et les erreurs éventuelles.
   const { error, status } = useSelector((state) => state.user);
 
-  // Récupère la liste des employés depuis Redux.
-  const employees = useSelector((state) => state.employees.employees);
-
   useEffect(() => {
     // Si aucun token n’existe, suppression du profil utilisateur.
     if (!token) {
@@ -78,13 +74,6 @@ function App() {
       dispatch(fetchUserProfile(token));
     }
   }, [token, status, dispatch]);
-
-  useEffect(() => {
-    // Charge les employés au démarrage si la liste est vide.
-    if (!employees || employees.length === 0) {
-      dispatch(loadEmployees());
-    }
-  }, [dispatch, employees]);
 
   return (
     <>
