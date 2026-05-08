@@ -19,7 +19,7 @@
     "@mui/material": "^9.0.0",
     "@react-input/mask": "^2.0.4",
     "@reduxjs/toolkit": "^2.11.2",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "lucide-react": "^1.11.0",
     "rc-select": "^14.16.8",
     "react": "^19.2.4",
